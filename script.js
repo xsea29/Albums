@@ -1,3 +1,11 @@
+const pageContainer = document.querySelector(".main");
+
+/* SMOOTH SCROLL */
+// const scroller = new LocomotiveScroll({
+//   el: pageContainer,
+//   smooth: true,
+// });
+
 const accordions = document.querySelectorAll(".accordion-header");
 
 accordions.forEach((accordion) => {
@@ -8,174 +16,203 @@ accordions.forEach((accordion) => {
 
 //Page 1 Animation---------------------------------------------------------->
 
-const frames = document.querySelectorAll(".image-section > div");
+function page1Animation() {
+  const frames = document.querySelectorAll(".image-section > div");
 
-const timeline1 = gsap.timeline();
+  const timeline1 = gsap.timeline();
 
-frames.forEach((frame, i) => {
-  timeline1.from(
-    frame,
-    {
-      y: -300,
-      opacity: 0,
-      duration: 1,
-      ease: "power1.out",
-    },
-    i * 0.2
-  );
-});
+  frames.forEach((frame, i) => {
+    timeline1.from(
+      frame,
+      {
+        y: -300,
+        opacity: 0,
+        duration: 1,
+        ease: "power1.out",
+      },
+      i * 0.2
+    );
+  });
 
-gsap
-  .timeline({
-    scrollTrigger: {
-      trigger: "body",
-      start: "top start",
-      end: "+=500",
-      scrub: 1,
-      // pin: true,
-    },
-  })
-  .to(
-    frames,
-    {
-      x: (index) => index * 70,
-      ease: "power1.out",
-      duration: 1,
-    },
-    0
-  )
-  .to(
-    ".transition-text .beautiful",
-    {
-      x: 300,
-      opacity: 1,
-      duration: 0.2,
-      ease: "power1.out",
-    },
-    0
-  )
+  gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: "body",
+        start: "top start",
+        end: "+=500",
+        scrub: 1,
+        // pin: true,
+      },
+    })
+    .to(
+      frames,
+      {
+        x: (index) => index * 70,
+        ease: "power1.out",
+        duration: 1,
+      },
+      0
+    )
+    .to(
+      ".transition-text .beautiful",
+      {
+        x: 300,
+        opacity: 1,
+        duration: 0.2,
+        ease: "power1.out",
+      },
+      0
+    )
 
-  .to(
-    ".transition-text .premium",
-    {
-      x: 300,
-      duration: 0.2,
-      ease: "power1.out",
-    },
-    0
-  );
+    .to(
+      ".transition-text .premium",
+      {
+        x: 300,
+        duration: 0.2,
+        ease: "power1.out",
+      },
+      0
+    );
 
-gsap.to(".whatsapp", {
-  rotation: 360,
-  duration: 10,
-  repeat: -1,
-  ease: "linear",
-  delay: 2,
-});
-
-//Page 2 Animation ------------------------------------------------------------------------------------->
-
-const headline = document.getElementById("headline");
-
-function wrapWordsInSpan(element) {
-  const words = element.innerHTML.split(/\s+/);
-  const wrappedWords = words.map((word) => `<span>${word}</span>`);
-  element.innerHTML = wrappedWords.join(" ");
+  gsap.to(".whatsapp", {
+    rotation: 360,
+    duration: 10,
+    repeat: -1,
+    ease: "linear",
+    delay: 2,
+  });
 }
 
-wrapWordsInSpan(headline);
+page1Animation();
 
-const timeline = gsap.timeline({
-  scrollTrigger: {
+//Page 2 Animation ------------------------------------------------------------------------------------->
+function page2Animation() {
+  const headline = document.getElementById("headline");
+
+  function wrapWordsInSpan(element) {
+    const words = element.innerHTML.split(/\s+/);
+    const wrappedWords = words.map((word) => `<span>${word}</span>`);
+    element.innerHTML = wrappedWords.join(" ");
+  }
+
+  wrapWordsInSpan(headline);
+
+  const timeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#headline",
+      start: "top 75%",
+      end: "bottom 25%",
+      scrub: true,
+    },
+  });
+
+  const wordsBeforeSpan = gsap.utils.toArray("#headline span").slice(0, 8);
+
+  const wordsInSpan = gsap.utils.toArray("#headline span").slice(8);
+
+  wordsBeforeSpan.forEach((word, i) => {
+    timeline.to(
+      word,
+      {
+        color: "#111",
+        duration: 0.1,
+        ease: "power2.out",
+      },
+      i * 0.1
+    );
+  });
+
+  wordsInSpan.forEach((word, i) => {
+    timeline.to(
+      word,
+      {
+        color: "blue",
+        duration: 0.1,
+        ease: "power2.out",
+      },
+      (wordsBeforeSpan.length + i) * 0.1
+    );
+  });
+
+  ScrollTrigger.create({
     trigger: "#headline",
-    start: "top 75%",
-    end: "bottom 25%",
-    scrub: true,
-  },
-});
-
-const wordsBeforeSpan = gsap.utils.toArray("#headline span").slice(0, 8);
-
-const wordsInSpan = gsap.utils.toArray("#headline span").slice(8);
-
-wordsBeforeSpan.forEach((word, i) => {
-  timeline.to(
-    word,
-    {
-      color: "#111",
-      duration: 0.1,
-      ease: "power2.out",
+    start: "bottom 25%",
+    onEnter: () => {
+      gsap.to(".divider", {
+        height: "100px",
+        duration: 0.2,
+        ease: "power2.out",
+      });
     },
-    i * 0.1
-  );
-});
+  });
 
-wordsInSpan.forEach((word, i) => {
-  timeline.to(
-    word,
-    {
-      color: "blue",
-      duration: 0.1,
-      ease: "power2.out",
-    },
-    (wordsBeforeSpan.length + i) * 0.1
-  );
-});
+  const textParagraph = document.getElementById("text-paragraph");
+  wrapWordsInSpan(textParagraph);
 
-ScrollTrigger.create({
-  trigger: "#headline",
-  start: "bottom 25%",
-  onEnter: () => {
-    gsap.to(".divider", {
-      height: "100px",
-      duration: 0.2,
+  const paragraphTimeline = gsap.timeline({
+    paused: true,
+  });
+
+  gsap.utils.toArray("#text-paragraph span").forEach((word, i) => {
+    paragraphTimeline.to(word, {
+      opacity: 1,
+      duration: 0.01,
       ease: "power2.out",
     });
-  },
-});
-
-const textParagraph = document.getElementById("text-paragraph");
-wrapWordsInSpan(textParagraph);
-
-const paragraphTimeline = gsap.timeline({
-  paused: true,
-});
-
-gsap.utils.toArray("#text-paragraph span").forEach((word, i) => {
-  paragraphTimeline.to(word, {
-    opacity: 1,
-    duration: 0.01,
-    ease: "power2.out",
   });
-});
 
-ScrollTrigger.create({
-  trigger: ".divider",
-  start: "top 25%",
-  end: "bottom top",
-  onEnter: () => {
-    paragraphTimeline.play(0);
-  },
-  onLeaveBack: () => {
-    paragraphTimeline.reverse();
-  },
-});
+  ScrollTrigger.create({
+    trigger: ".divider",
+    start: "top 25%",
+    end: "bottom top",
+    onEnter: () => {
+      paragraphTimeline.play(0);
+    },
+    onLeaveBack: () => {
+      paragraphTimeline.reverse();
+    },
+  });
+}
+
+page2Animation();
 
 //Page 3 Animation --------------------------------------------------------------->
 
-gsap.registerPlugin(ScrollTrigger);
+function page3Animation() {
+  gsap.registerPlugin(ScrollTrigger);
 
-const videoContainer = document.querySelector(".video-container");
+  const videoContainer = document.querySelector(".video-container");
 
-gsap.to(videoContainer, {
-  width: "100%",
-  height: "100%",
-  duration: 0.1,
-  ease: "power1.out",
-  scrollTrigger: {
-    trigger: videoContainer,
-    start: "top 80%",
-    end: "bottom 0%",
-    scrub: 1,
-  },
+  gsap.to(videoContainer, {
+    width: "100%",
+    height: "100%",
+    duration: 0.1,
+    ease: "power1.out",
+    scrollTrigger: {
+      trigger: videoContainer,
+      start: "top 80%",
+      end: "bottom 0%",
+      scrub: 1,
+    },
+  });
+}
+
+page3Animation();
+
+//Page 4 Animation ----------------------------------------------------------------------------------->
+
+// ScrollTrigger.create({
+//   trigger: ".page-4-content",
+//   start: "top top",
+//   end: "bottom bottom",
+//   pin: ".left",
+//   scrub: 1,
+
+// });
+
+ScrollTrigger.create({
+  trigger: ".image-text-container",
+  start: "top top",
+  end: "bottom bottom",
+  pin: ".left",
 });
